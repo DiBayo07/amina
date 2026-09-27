@@ -406,53 +406,12 @@ html, body {
 }
 
 /* ==========================================================
-   STEP 4 & 5: GALAXY & CLEAR PORTRAIT
+   STEP 4 & 5: GALAXY & 100% TYPOGRAPHIC PORTRAIT ART
    ========================================================== */
 #screen-galaxy {
     padding: 0;
     overflow: hidden;
     position: relative;
-}
-
-/* Crystal-Clear HD Photo Backdrop */
-.portrait-backdrop {
-    position: absolute;
-    top: 46%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 250px;
-    height: 310px;
-    border-radius: 24px;
-    overflow: hidden;
-    opacity: 0;
-    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    z-index: 2;
-    box-shadow: 0 0 35px rgba(255, 133, 162, 0.35), 0 0 70px rgba(179, 136, 255, 0.25);
-    border: 1.5px solid rgba(255, 216, 128, 0.3);
-}
-
-.portrait-backdrop.visible {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-}
-
-.portrait-hd-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    filter: contrast(1.06) brightness(1.03);
-}
-
-.portrait-halo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 50% 50%, rgba(255, 216, 128, 0) 60%, rgba(10, 6, 20, 0.5) 100%);
-    pointer-events: none;
 }
 
 #galaxy-canvas {
@@ -665,11 +624,6 @@ html, body {
 
 /* Mobile responsive */
 @media (max-width: 480px) {
-    .portrait-backdrop {
-        width: 220px;
-        height: 275px;
-        top: 44%;
-    }
     .envelope-recipient {
         font-size: 2.3rem;
     }

@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Letter Elements
     const paragraphs = document.querySelectorAll('#letter-paragraphs p');
-    const letterContentBox = document.getElementById('letter-content-box');
     const btnSkipTyping = document.getElementById('btn-skip-typing');
     const btnToPolaroid = document.getElementById('btn-to-polaroid');
 
@@ -53,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.classList.add('show');
         setTimeout(() => {
             toast.classList.remove('show');
-        }, 3200);
+        }, 3000);
     }
 
     // ==========================================================
@@ -63,13 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!waxSealBtn || waxSealBtn.dataset.opened) return;
         waxSealBtn.dataset.opened = "true";
 
-        // Sound and Haptics
+        // Only Wax Crack Sound & Haptics
         if (window.audioManager) {
             window.audioManager.playWaxCrackSound();
             window.audioManager.triggerHaptic([50, 70, 180, 90]);
         }
 
-        // Generate dynamic wax shards
+        // Dynamic wax shards
         if (sealShards) {
             sealShards.innerHTML = '';
             sealShards.classList.add('cracking');
@@ -101,14 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
             envelopeEl.classList.add('opening');
         }
 
-        // Transition to letter
+        // Transition to letter and start song
         setTimeout(() => {
             switchScreen(screenLetter);
             startLetterTyping();
             if (window.audioManager) {
                 window.audioManager.playMusic();
             }
-        }, 750);
+        }, 700);
     }
 
     if (waxSealBtn) {
@@ -120,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================
-    // STEP 2: LETTER REVEAL
+    // STEP 2: LETTER REVEAL (NO AUTO SCROLLING JUMP)
     // ==========================================================
     function startLetterTyping() {
         currentParagraphIdx = 0;
@@ -129,17 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentParagraphIdx < paragraphs.length) {
                 const p = paragraphs[currentParagraphIdx];
                 p.classList.add('revealed');
-                
-                // Smooth scroll down as text appears
-                if (letterContentBox) {
-                    letterContentBox.scrollTo({
-                        top: letterContentBox.scrollHeight,
-                        behavior: 'smooth'
-                    });
-                }
-                
                 currentParagraphIdx++;
-                typingInterval = setTimeout(revealNext, 2200);
+                typingInterval = setTimeout(revealNext, 2000);
             }
         }
 
@@ -149,12 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function revealAllParagraphs() {
         if (typingInterval) clearTimeout(typingInterval);
         paragraphs.forEach(p => p.classList.add('revealed'));
-        if (letterContentBox) {
-            letterContentBox.scrollTo({
-                top: letterContentBox.scrollHeight,
-                behavior: 'smooth'
-            });
-        }
         if (btnSkipTyping) btnSkipTyping.style.display = 'none';
     }
 
@@ -166,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnToPolaroid.addEventListener('click', () => {
             switchScreen(screenPolaroid);
             if (window.audioManager) {
-                window.audioManager.triggerHaptic([30, 40]);
+                window.audioManager.triggerHaptic([30]);
             }
         });
     }
@@ -182,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.galaxyEngine = galaxyEngine;
             }
             if (window.audioManager) {
-                window.audioManager.triggerHaptic([40, 60, 100]);
+                window.audioManager.triggerHaptic([40]);
             }
         });
     }
@@ -202,11 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnSaveImage.addEventListener('click', () => {
             if (galaxyEngine) {
                 galaxyEngine.exportHighResPortrait();
-                showToast('✨ Портрет сохранён в высоком качестве!');
-                if (window.audioManager) {
-                    window.audioManager.playSparkleSound();
-                    window.audioManager.triggerHaptic([30, 80, 50]);
-                }
+                showToast('✨ Портрет сохранён в галерею!');
             }
         });
     }
@@ -246,9 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
             sigPath.classList.remove('draw');
             void sigPath.offsetWidth; // Trigger reflow
             sigPath.classList.add('draw');
-        }
-        if (window.audioManager) {
-            window.audioManager.playSparkleSound();
         }
     };
 });

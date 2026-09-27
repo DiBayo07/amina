@@ -1,8 +1,6 @@
 ﻿/**
  * Audio and Haptics Manager
- * Handles realistic wax seal cracking sound via Web Audio API,
- * background music playback (Arctic Monkeys - I Wanna Be Yours),
- * and tactile haptic vibration.
+ * Handles ONLY wax seal cracking sound and background music playback (Arctic Monkeys - I Wanna Be Yours).
  */
 
 class AudioManager {
@@ -10,8 +8,6 @@ class AudioManager {
         this.ctx = null;
         this.bgMusic = null;
         this.isMusicPlaying = false;
-        this.musicVolume = 0.65;
-        this.ambientSynthActive = false;
         this.initAudioContext();
     }
 
@@ -36,7 +32,7 @@ class AudioManager {
 
             const now = this.ctx.currentTime;
             
-            // 1. Transient burst - the initial sharp snap
+            // Transient sharp snap
             const snapOsc = this.ctx.createOscillator();
             const snapGain = this.ctx.createGain();
             snapOsc.type = 'triangle';
@@ -51,10 +47,10 @@ class AudioManager {
             snapOsc.start(now);
             snapOsc.stop(now + 0.1);
 
-            // 2. Multiple micro-crackle noise bursts (fracture shards)
-            for (let i = 0; i < 6; i++) {
+            // Micro-crackle noise bursts
+            for (let i = 0; i < 5; i++) {
                 const delay = i * 0.02 + Math.random() * 0.015;
-                const bufferSize = this.ctx.sampleRate * 0.04;
+                const bufferSize = Math.floor(this.ctx.sampleRate * 0.04);
                 const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
                 const data = buffer.getChannelData(0);
                 for (let j = 0; j < bufferSize; j++) {
@@ -82,7 +78,7 @@ class AudioManager {
                 noise.stop(startTime + 0.05);
             }
 
-            // 3. Low-frequency paper thud
+            // Paper thud
             const thudOsc = this.ctx.createOscillator();
             const thudGain = this.ctx.createGain();
             thudOsc.type = 'sine';
@@ -98,79 +94,22 @@ class AudioManager {
             thudOsc.stop(now + 0.22);
 
         } catch (e) {
-            console.warn("Audio synthesis error:", e);
+            console.warn("Wax sound error:", e);
         }
     }
 
-    // Gentle harp / chime sound for galaxy morphing
-    playGalaxyMorphSound() {
-        try {
-            this.ensureContextRunning();
-            if (!this.ctx) return;
-
-            const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98]; // C5, E5, G5, C6, E6, G6
-            const now = this.ctx.currentTime;
-
-            notes.forEach((freq, index) => {
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                
-                osc.type = 'sine';
-                osc.frequency.value = freq;
-
-                const startTime = now + index * 0.08;
-                gain.gain.setValueAtTime(0, startTime);
-                gain.gain.linearRampToValueAtTime(0.18, startTime + 0.04);
-                gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 1.2);
-
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-
-                osc.start(startTime);
-                osc.stop(startTime + 1.3);
-            });
-        } catch (e) {
-            console.warn("Morph sound error:", e);
-        }
-    }
-
-    // Sparkle chime when signature finishes
-    playSparkleSound() {
-        try {
-            this.ensureContextRunning();
-            if (!this.ctx) return;
-            const now = this.ctx.currentTime;
-            const freqs = [1046.5, 1318.5, 1567.98, 2093.0];
-            freqs.forEach((f, idx) => {
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.value = f;
-                const st = now + idx * 0.05;
-                gain.gain.setValueAtTime(0.1, st);
-                gain.gain.exponentialRampToValueAtTime(0.001, st + 0.6);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start(st);
-                osc.stop(st + 0.65);
-            });
-        } catch (e) {
-            console.warn("Sparkle sound error:", e);
-        }
-    }
-
-    // Tactile haptic feedback
+    // Tactile haptic feedback (silent)
     triggerHaptic(pattern = [40, 60, 120, 80]) {
         if ('vibrate' in navigator) {
             try {
                 navigator.vibrate(pattern);
             } catch (e) {
-                // Ignore if blocked by browser policy
+                // ignore
             }
         }
     }
 
-    // Background music initialization and playback (Arctic Monkeys - I Wanna Be Yours)
+    // Background music initialization and playback
     initMusic() {
         if (!this.bgMusic) {
             this.bgMusic = document.getElementById('bg-music');
@@ -189,9 +128,7 @@ class AudioManager {
             this.fadeInMusic();
             this.updatePlayerUI(true);
         }).catch((err) => {
-            console.log("Autoplay blocked or track loading, will resume on touch:", err);
-            // Setup fallback synthesizer chords in case audio file is blocked
-            this.startAmbientSynthFallback();
+            console.log("Audio waiting for user gesture:", err);
         });
     }
 
@@ -211,7 +148,7 @@ class AudioManager {
         }
     }
 
-    fadeInMusic(targetVol = 0.7, duration = 3000) {
+    fadeInMusic(targetVol = 0.75, duration = 2500) {
         if (!this.bgMusic) return;
         let start = Date.now();
         const initialVol = this.bgMusic.volume;
@@ -227,68 +164,13 @@ class AudioManager {
 
     updatePlayerUI(isPlaying) {
         const disc = document.getElementById('music-disc');
-        const playIcon = document.getElementById('music-play-icon');
-        const pauseIcon = document.getElementById('music-pause-icon');
         if (disc) {
             if (isPlaying) {
                 disc.classList.add('playing');
-                if (playIcon) playIcon.style.display = 'none';
-                if (pauseIcon) pauseIcon.style.display = 'block';
             } else {
                 disc.classList.remove('playing');
-                if (playIcon) playIcon.style.display = 'block';
-                if (pauseIcon) pauseIcon.style.display = 'none';
             }
         }
-    }
-
-    // Romantic ambient synthesizer (plays warm guitar/rhodes-like chords if audio is muted or loading)
-    startAmbientSynthFallback() {
-        if (this.ambientSynthActive || !this.ctx) return;
-        this.ambientSynthActive = true;
-        
-        // Arctic Monkeys - I Wanna Be Yours progression (Cm - Gm - Ab - Bb in romantic lo-fi voicings)
-        const chords = [
-            [261.63, 311.13, 392.00], // Cm
-            [196.00, 233.08, 293.66], // Gm
-            [207.65, 261.63, 311.13], // Ab
-            [233.08, 293.66, 349.23]  // Bb
-        ];
-
-        let chordIdx = 0;
-        const playNextChord = () => {
-            if (!this.ambientSynthActive || !this.ctx) return;
-            const now = this.ctx.currentTime;
-            const chord = chords[chordIdx % chords.length];
-            chordIdx++;
-
-            chord.forEach(freq => {
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                const filter = this.ctx.createBiquadFilter();
-
-                osc.type = 'sine';
-                osc.frequency.value = freq;
-
-                filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(600, now);
-
-                gain.gain.setValueAtTime(0, now);
-                gain.gain.linearRampToValueAtTime(0.035, now + 0.8);
-                gain.gain.exponentialRampToValueAtTime(0.0005, now + 3.8);
-
-                osc.connect(filter);
-                filter.connect(gain);
-                gain.connect(this.ctx.destination);
-
-                osc.start(now);
-                osc.stop(now + 4.0);
-            });
-
-            setTimeout(playNextChord, 4000);
-        };
-
-        playNextChord();
     }
 }
 

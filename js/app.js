@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const waxSealBtn = document.getElementById('wax-seal-btn');
     const envelopeEl = document.getElementById('envelope-element');
     const sealShards = document.getElementById('seal-shards');
+    const envWrapper = document.getElementById('envelope-card');
 
     // Letter Elements
     const paragraphs = document.querySelectorAll('#letter-paragraphs p');
@@ -34,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let galaxyEngine = null;
     let typingInterval = null;
     let currentParagraphIdx = 0;
+    let hasOpened = false;
 
     // Screen transition utility
     function switchScreen(activeScreen) {
@@ -58,68 +60,78 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================================
     // STEP 1: WAX SEAL SHATTER & ENVELOPE OPEN
     // ==========================================================
-    function triggerWaxShatter() {
-        if (!waxSealBtn || waxSealBtn.dataset.opened) return;
-        waxSealBtn.dataset.opened = "true";
+    function triggerWaxShatter(e) {
+        if (hasOpened) return;
+        hasOpened = true;
 
-        // Only Wax Crack Sound & Haptics
-        if (window.audioManager) {
-            window.audioManager.playWaxCrackSound();
-            window.audioManager.triggerHaptic([50, 70, 180, 90]);
+        // Audio & Haptics
+        try {
+            if (window.audioManager) {
+                window.audioManager.playWaxCrackSound();
+                window.audioManager.triggerHaptic([50, 70, 180, 90]);
+            }
+        } catch (err) {
+            console.warn(err);
         }
 
         // Dynamic wax shards
-        if (sealShards) {
-            sealShards.innerHTML = '';
-            sealShards.classList.add('cracking');
-            const shardCount = 16;
-            for (let i = 0; i < shardCount; i++) {
-                const shard = document.createElement('div');
-                shard.className = 'shard';
-                const size = Math.random() * 14 + 6;
-                shard.style.width = `${size}px`;
-                shard.style.height = `${size * 0.8}px`;
-                shard.style.top = '35%';
-                shard.style.left = '35%';
+        try {
+            if (sealShards) {
+                sealShards.innerHTML = '';
+                sealShards.classList.add('cracking');
+                const shardCount = 16;
+                for (let i = 0; i < shardCount; i++) {
+                    const shard = document.createElement('div');
+                    shard.className = 'shard';
+                    const size = Math.random() * 14 + 6;
+                    shard.style.width = `${size}px`;
+                    shard.style.height = `${size * 0.8}px`;
+                    shard.style.top = '35%';
+                    shard.style.left = '35%';
 
-                const angle = Math.random() * Math.PI * 2;
-                const dist = Math.random() * 120 + 50;
-                const tx = Math.cos(angle) * dist;
-                const ty = Math.sin(angle) * dist;
-                const rot = (Math.random() - 0.5) * 720;
+                    const angle = Math.random() * Math.PI * 2;
+                    const dist = Math.random() * 120 + 50;
+                    const tx = Math.cos(angle) * dist;
+                    const ty = Math.sin(angle) * dist;
+                    const rot = (Math.random() - 0.5) * 720;
 
-                shard.style.setProperty('--tx', `${tx}px`);
-                shard.style.setProperty('--ty', `${ty}px`);
-                shard.style.setProperty('--rot', `${rot}deg`);
-                sealShards.appendChild(shard);
+                    shard.style.setProperty('--tx', `${tx}px`);
+                    shard.style.setProperty('--ty', `${ty}px`);
+                    shard.style.setProperty('--rot', `${rot}deg`);
+                    sealShards.appendChild(shard);
+                }
             }
-        }
+        } catch (err) {}
 
         // Envelope breaking animation
         if (envelopeEl) {
             envelopeEl.classList.add('opening');
         }
 
-        // Transition to letter and start song
+        // Transition to letter and start music
         setTimeout(() => {
             switchScreen(screenLetter);
             startLetterTyping();
-            if (window.audioManager) {
-                window.audioManager.playMusic();
-            }
-        }, 700);
+            try {
+                if (window.audioManager) {
+                    window.audioManager.playMusic();
+                }
+            } catch (err) {}
+        }, 600);
     }
 
+    // Support both click, touch, and pointer
     if (waxSealBtn) {
         waxSealBtn.addEventListener('click', triggerWaxShatter);
+        waxSealBtn.addEventListener('touchend', triggerWaxShatter);
     }
-    const envWrapper = document.getElementById('envelope-card');
     if (envWrapper) {
         envWrapper.addEventListener('click', triggerWaxShatter);
+        envWrapper.addEventListener('touchend', triggerWaxShatter);
     }
 
     // ==========================================================
-    // STEP 2: LETTER REVEAL (NO AUTO SCROLLING JUMP)
+    // STEP 2: LETTER REVEAL
     // ==========================================================
     function startLetterTyping() {
         currentParagraphIdx = 0;

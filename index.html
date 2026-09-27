@@ -28,12 +28,7 @@
         <div class="nebula-glow nebula-2"></div>
     </div>
 
-    <!-- Hidden YouTube Audio Player for Arctic Monkeys - I Wanna Be Yours -->
-    <div id="yt-player-container" style="position:fixed; top:-9999px; left:-9999px; width:1px; height:1px; opacity:0; pointer-events:none;">
-        <div id="yt-player"></div>
-    </div>
-
-    <!-- HTML5 Audio Fallback -->
+    <!-- Audio Element (with local and remote sources) -->
     <audio id="bg-music" loop preload="auto">
         <source src="assets/music.mp3" type="audio/mpeg">
     </audio>
@@ -132,25 +127,23 @@
              ШАГ 4 & 5: ГАЛАКТИКА И ПОРТРЕТ ИЗ СЛОВ
              ========================================== -->
         <section id="screen-galaxy" class="screen">
-            <!-- Clear HD Photo Backdrop (reveals in portrait mode) -->
+            <!-- Clear HD Photo Backdrop -->
             <div id="portrait-backdrop" class="portrait-backdrop">
                 <img src="assets/amina.png" alt="Амина" class="portrait-hd-img">
                 <div class="portrait-halo"></div>
             </div>
 
-            <!-- Fast 60FPS WebGL / 2D Canvas Engine -->
+            <!-- Fast 60FPS Canvas Engine -->
             <canvas id="galaxy-canvas"></canvas>
 
             <!-- HUD Overlay -->
             <div class="galaxy-hud">
                 <!-- Top Bar -->
                 <div class="hud-top">
-                    <!-- Counter -->
                     <div class="love-counter-box">
                         <span>♥</span> <span id="love-counter">0</span> признаний
                     </div>
 
-                    <!-- Music Player Widget -->
                     <div class="music-player-widget" id="music-widget" title="Включить / выключить музыку">
                         <div class="music-disc" id="music-disc"></div>
                         <div class="music-info">
@@ -160,14 +153,12 @@
                     </div>
                 </div>
 
-                <!-- Bottom Signature & Actions & Hint (Moved to bottom so photo is 100% visible!) -->
+                <!-- Bottom Signature & Actions & Hint -->
                 <div class="hud-bottom">
-                    <!-- Hint moved to bottom -->
                     <div class="galaxy-hint" id="galaxy-hint">
                         🌌 Вращай галактику пальцем • Нажми кнопку внизу, чтобы собрать образ
                     </div>
 
-                    <!-- Calligraphic Signature -->
                     <div class="signature-container" id="signature-section">
                         <svg class="signature-svg" viewBox="0 0 300 90">
                             <path class="signature-path" id="signature-path" d="M 40,65 Q 60,15 80,65 Q 95,45 110,65 Q 125,35 140,65 Q 155,50 170,65 Q 190,20 210,65 Q 230,45 260,35" />
@@ -175,7 +166,6 @@
                         </svg>
                     </div>
 
-                    <!-- Actions -->
                     <div class="action-buttons-group">
                         <button id="btn-toggle-view" class="btn btn-primary" style="box-shadow: 0 0 20px rgba(255,133,162,0.6);">
                             ✨ Собрать Портрет
@@ -192,9 +182,6 @@
         </section>
 
     </div>
-
-    <!-- YouTube IFrame API for Arctic Monkeys - I Wanna Be Yours -->
-    <script src="https://www.youtube.com/iframe_api"></script>
 
     <!-- Application Scripts -->
     <script src="js/languages.js"></script>

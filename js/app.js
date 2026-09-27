@@ -4,6 +4,83 @@
  * music player widgets, and interactive galaxy controls.
  */
 
+// Global trigger accessible immediately from inline HTML
+let hasOpened = false;
+
+window.openEnvelope = function(e) {
+    if (hasOpened) return;
+    hasOpened = true;
+
+    if (e && e.stopPropagation) {
+        e.stopPropagation();
+    }
+
+    const envelopeEl = document.getElementById('envelope-element');
+    const sealShards = document.getElementById('seal-shards');
+    const screenEnvelope = document.getElementById('screen-envelope');
+    const screenLetter = document.getElementById('screen-letter');
+
+    // Audio & Haptics
+    try {
+        if (window.audioManager) {
+            window.audioManager.playWaxCrackSound();
+            window.audioManager.triggerHaptic([50, 70, 180, 90]);
+        }
+    } catch (err) {
+        console.warn("Audio err:", err);
+    }
+
+    // Dynamic wax shards
+    try {
+        if (sealShards) {
+            sealShards.innerHTML = '';
+            sealShards.classList.add('cracking');
+            const shardCount = 16;
+            for (let i = 0; i < shardCount; i++) {
+                const shard = document.createElement('div');
+                shard.className = 'shard';
+                const size = Math.random() * 14 + 6;
+                shard.style.width = `${size}px`;
+                shard.style.height = `${size * 0.8}px`;
+                shard.style.top = '35%';
+                shard.style.left = '35%';
+
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * 120 + 50;
+                const tx = Math.cos(angle) * dist;
+                const ty = Math.sin(angle) * dist;
+                const rot = (Math.random() - 0.5) * 720;
+
+                shard.style.setProperty('--tx', `${tx}px`);
+                shard.style.setProperty('--ty', `${ty}px`);
+                shard.style.setProperty('--rot', `${rot}deg`);
+                sealShards.appendChild(shard);
+            }
+        }
+    } catch (err) {}
+
+    // Envelope breaking animation
+    if (envelopeEl) {
+        envelopeEl.classList.add('opening');
+    }
+
+    // Transition to letter and start music
+    setTimeout(() => {
+        if (screenEnvelope) screenEnvelope.classList.remove('active');
+        if (screenLetter) screenLetter.classList.add('active');
+
+        if (window.startLetterTyping) {
+            window.startLetterTyping();
+        }
+
+        try {
+            if (window.audioManager) {
+                window.audioManager.playMusic();
+            }
+        } catch (err) {}
+    }, 600);
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Screens
     const screenEnvelope = document.getElementById('screen-envelope');
@@ -13,8 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Envelope Elements
     const waxSealBtn = document.getElementById('wax-seal-btn');
-    const envelopeEl = document.getElementById('envelope-element');
-    const sealShards = document.getElementById('seal-shards');
     const envWrapper = document.getElementById('envelope-card');
 
     // Letter Elements
@@ -35,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let galaxyEngine = null;
     let typingInterval = null;
     let currentParagraphIdx = 0;
-    let hasOpened = false;
 
     // Screen transition utility
     function switchScreen(activeScreen) {
@@ -57,83 +131,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 
-    // ==========================================================
-    // STEP 1: WAX SEAL SHATTER & ENVELOPE OPEN
-    // ==========================================================
-    function triggerWaxShatter(e) {
-        if (hasOpened) return;
-        hasOpened = true;
-
-        // Audio & Haptics
-        try {
-            if (window.audioManager) {
-                window.audioManager.playWaxCrackSound();
-                window.audioManager.triggerHaptic([50, 70, 180, 90]);
-            }
-        } catch (err) {
-            console.warn(err);
-        }
-
-        // Dynamic wax shards
-        try {
-            if (sealShards) {
-                sealShards.innerHTML = '';
-                sealShards.classList.add('cracking');
-                const shardCount = 16;
-                for (let i = 0; i < shardCount; i++) {
-                    const shard = document.createElement('div');
-                    shard.className = 'shard';
-                    const size = Math.random() * 14 + 6;
-                    shard.style.width = `${size}px`;
-                    shard.style.height = `${size * 0.8}px`;
-                    shard.style.top = '35%';
-                    shard.style.left = '35%';
-
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = Math.random() * 120 + 50;
-                    const tx = Math.cos(angle) * dist;
-                    const ty = Math.sin(angle) * dist;
-                    const rot = (Math.random() - 0.5) * 720;
-
-                    shard.style.setProperty('--tx', `${tx}px`);
-                    shard.style.setProperty('--ty', `${ty}px`);
-                    shard.style.setProperty('--rot', `${rot}deg`);
-                    sealShards.appendChild(shard);
-                }
-            }
-        } catch (err) {}
-
-        // Envelope breaking animation
-        if (envelopeEl) {
-            envelopeEl.classList.add('opening');
-        }
-
-        // Transition to letter and start music
-        setTimeout(() => {
-            switchScreen(screenLetter);
-            startLetterTyping();
-            try {
-                if (window.audioManager) {
-                    window.audioManager.playMusic();
-                }
-            } catch (err) {}
-        }, 600);
-    }
-
-    // Support both click, touch, and pointer
+    // Bind Envelope events
     if (waxSealBtn) {
-        waxSealBtn.addEventListener('click', triggerWaxShatter);
-        waxSealBtn.addEventListener('touchend', triggerWaxShatter);
+        waxSealBtn.addEventListener('click', window.openEnvelope);
+        waxSealBtn.addEventListener('touchend', window.openEnvelope);
     }
     if (envWrapper) {
-        envWrapper.addEventListener('click', triggerWaxShatter);
-        envWrapper.addEventListener('touchend', triggerWaxShatter);
+        envWrapper.addEventListener('click', window.openEnvelope);
+        envWrapper.addEventListener('touchend', window.openEnvelope);
     }
 
     // ==========================================================
     // STEP 2: LETTER REVEAL
     // ==========================================================
-    function startLetterTyping() {
+    window.startLetterTyping = function() {
         currentParagraphIdx = 0;
         
         function revealNext() {
@@ -146,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         revealNext();
-    }
+    };
 
     function revealAllParagraphs() {
         if (typingInterval) clearTimeout(typingInterval);

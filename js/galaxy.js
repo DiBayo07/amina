@@ -1,42 +1,40 @@
 ﻿/**
- * Galaxy & Portrait Engine - ULTRA-OPTIMIZED (60 FPS on Mobile)
- * High-performance 3D galaxy of multilingual love phrases that morphs into Amina's portrait.
+ * Galaxy & Portrait Engine - ULTRA 60FPS FOR MOBILE
+ * 3D swirling galaxy that converges around a crystal-clear portrait of Amina.
  */
 
 class GalaxyEngine {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d', { alpha: false, desynchronized: true });
+        this.ctx = this.canvas.getContext('2d', { alpha: true });
         this.particles = [];
-        this.displayCount = 9494; // Symbolic count for display
-        this.simCount = 2800; // Optimal particle count for smooth 60fps
+        this.displayCount = 9494; // Symbol of infinite love
+        this.simCount = 1200; // Perfect for locked 60 FPS on any phone
         this.state = 'GALAXY'; // 'GALAXY' or 'PORTRAIT'
-        this.morphProgress = 0; // 0 = Galaxy, 1 = Portrait
+        this.morphProgress = 0;
         this.targetMorph = 0;
 
-        // 3D Camera / Rotation
-        this.rotX = 0.5;
+        // 3D Rotation
+        this.rotX = 0.52;
         this.rotY = 0;
-        this.targetRotX = 0.5;
+        this.targetRotX = 0.52;
         this.targetRotY = 0;
         this.zoom = 1;
         this.targetZoom = 1;
-        this.galaxySpeed = 0.0025;
+        this.galaxySpeed = 0.0028;
         
-        // Interaction state
+        // Interaction
         this.isDragging = false;
         this.lastMouseX = 0;
         this.lastMouseY = 0;
         this.touchDist = 0;
-        this.inspectPoint = null;
 
-        // Background stars (pre-rendered for speed)
+        // Background stars
         this.bgStars = [];
 
-        // Image data
+        // Image
         this.img = new Image();
         this.imgLoaded = false;
-        this.sampledPixels = [];
 
         // Counter
         this.counterElement = document.getElementById('love-counter');
@@ -55,7 +53,7 @@ class GalaxyEngine {
     }
 
     resize() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.5); // Cap at 1.5 for performance
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
         this.width = window.innerWidth;
         this.height = window.innerHeight;
         this.canvas.width = Math.floor(this.width * dpr);
@@ -65,13 +63,13 @@ class GalaxyEngine {
         this.ctx.scale(dpr, dpr);
 
         if (this.imgLoaded) {
-            this.recalculatePortraitCoordinates();
+            this.recalculateCoordinates();
         }
     }
 
     initBackgroundStars() {
         this.bgStars = [];
-        const count = 100;
+        const count = 75;
         for (let i = 0; i < count; i++) {
             this.bgStars.push({
                 x: Math.random() * window.innerWidth,
@@ -80,7 +78,7 @@ class GalaxyEngine {
                 alpha: Math.random() * 0.7 + 0.3,
                 twinkleSpeed: Math.random() * 0.03 + 0.01,
                 twinkle: Math.random() * Math.PI * 2,
-                color: Math.random() > 0.3 ? '#ffffff' : (Math.random() > 0.5 ? '#ffd1dc' : '#cce5ff')
+                color: Math.random() > 0.3 ? '#ffffff' : '#ffd1dc'
             });
         }
     }
@@ -89,105 +87,42 @@ class GalaxyEngine {
         this.img.crossOrigin = "Anonymous";
         this.img.src = src;
         this.img.onload = () => {
-            this.processImage();
+            this.imgLoaded = true;
+            this.createParticles();
         };
         this.img.onerror = () => {
-            console.warn("Generating procedural fallback portrait");
-            this.generateProceduralPortrait();
+            this.imgLoaded = true;
+            this.createParticles();
         };
-    }
-
-    processImage() {
-        const offCanvas = document.createElement('canvas');
-        const offCtx = offCanvas.getContext('2d');
-        const targetW = 160;
-        const targetH = Math.round(targetW * (this.img.height / this.img.width));
-        
-        offCanvas.width = targetW;
-        offCanvas.height = targetH;
-        offCtx.drawImage(this.img, 0, 0, targetW, targetH);
-        
-        const imgData = offCtx.getImageData(0, 0, targetW, targetH);
-        const data = imgData.data;
-
-        this.sampledPixels = [];
-
-        // Sample points with density weighted by contrast and facial features
-        for (let y = 0; y < targetH; y += 1) {
-            for (let x = 0; x < targetW; x += 1) {
-                const idx = (y * targetW + x) * 4;
-                const r = data[idx];
-                const g = data[idx + 1];
-                const b = data[idx + 2];
-                const a = data[idx + 3];
-
-                if (a < 30) continue;
-
-                const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-                const isFeature = lum < 0.35 || (r > g + 15 && r > b + 10) || lum > 0.75;
-                const prob = isFeature ? 0.75 : 0.32;
-
-                if (Math.random() < prob) {
-                    this.sampledPixels.push({
-                        nx: (x / targetW - 0.5),
-                        ny: (y / targetH - 0.5),
-                        r, g, b,
-                        lum,
-                        isFeature
-                    });
-                }
-            }
-        }
-
-        // Shuffle
-        for (let i = this.sampledPixels.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [this.sampledPixels[i], this.sampledPixels[j]] = [this.sampledPixels[j], this.sampledPixels[i]];
-        }
-
-        this.imgLoaded = true;
-        this.createParticles();
-    }
-
-    generateProceduralPortrait() {
-        this.sampledPixels = [];
-        for (let i = 0; i < this.simCount; i++) {
-            const t = Math.random() * Math.PI * 2;
-            const r = Math.sqrt(Math.random()) * 0.45;
-            this.sampledPixels.push({
-                nx: r * Math.cos(t),
-                ny: r * Math.sin(t),
-                r: 255, g: 190, b: 215,
-                lum: 0.7,
-                isFeature: true
-            });
-        }
-        this.imgLoaded = true;
-        this.createParticles();
     }
 
     createParticles() {
         this.particles = [];
-        const count = Math.min(this.sampledPixels.length, this.simCount);
+        const count = this.simCount;
 
         const arms = 3;
         const armOffsetMax = 0.45;
-        const coreRadius = 35;
-        const maxRadius = Math.min(this.width, this.height) * 0.62;
+        const coreRadius = 30;
+        const maxRadius = Math.min(this.width, this.height) * 0.65;
 
         const galaxyPalette = [
-            { r: 255, g: 215, b: 180 },
-            { r: 255, g: 140, b: 190 },
-            { r: 180, g: 145, b: 255 },
-            { r: 150, g: 225, b: 255 },
-            { r: 255, g: 255, b: 255 }
+            { r: 255, g: 215, b: 180 }, // Gold star
+            { r: 255, g: 140, b: 190 }, // Rose nebula
+            { r: 180, g: 145, b: 255 }, // Violet glow
+            { r: 150, g: 225, b: 255 }, // Ice blue
+            { r: 255, g: 255, b: 255 }  // Pure white
         ];
 
+        // Frame dimensions for portrait constellation
+        const isMobile = this.width < 480;
+        const pW = isMobile ? 220 : 250;
+        const pH = isMobile ? 275 : 310;
+        const pRadius = 24;
+
         for (let i = 0; i < count; i++) {
-            const pixel = this.sampledPixels[i];
             const phrase = LOVE_LANGUAGES[i % LOVE_LANGUAGES.length];
 
-            // 1. Galaxy coordinates
+            // 1. Galaxy 3D coordinates
             const r = coreRadius + Math.pow(Math.random(), 1.6) * (maxRadius - coreRadius);
             const arm = i % arms;
             const armAngle = (arm * 2 * Math.PI) / arms;
@@ -196,46 +131,59 @@ class GalaxyEngine {
             const theta = armAngle + spiralAngle + randomOffset;
 
             const gx = Math.cos(theta) * r;
-            const gy = (Math.random() - 0.5) * (25 + (1 - r / maxRadius) * 50);
+            const gy = (Math.random() - 0.5) * (20 + (1 - r / maxRadius) * 45);
             const gz = Math.sin(theta) * r;
 
             const gCol = galaxyPalette[i % galaxyPalette.length];
 
-            // 2. Portrait coordinates
-            const portraitScale = Math.min(this.width * 0.85, this.height * 0.62, 440);
-            const px = pixel.nx * portraitScale;
-            const py = pixel.ny * portraitScale * (this.img.height / this.img.width || 1.1) - 15;
-            const pz = (1 - pixel.lum) * 16 - 8;
+            // 2. Portrait constellation coordinates:
+            // Part around perimeter halo, part twinkling across the photo
+            let px, py, pz;
+            if (i < count * 0.45) {
+                // Outer glowing aura / frame
+                const angle = Math.random() * Math.PI * 2;
+                const spread = (Math.random() - 0.5) * 35;
+                const halfW = pW / 2 + 10 + spread;
+                const halfH = pH / 2 + 10 + spread;
+                px = Math.cos(angle) * halfW;
+                py = Math.sin(angle) * halfH - 20;
+                pz = (Math.random() - 0.5) * 15;
+            } else {
+                // Starlight constellation overlay on photo
+                px = (Math.random() - 0.5) * (pW - 20);
+                py = (Math.random() - 0.5) * (pH - 20) - 20;
+                pz = (Math.random() - 0.5) * 20;
+            }
 
             this.particles.push({
                 gx, gy, gz,
                 orbitR: r,
                 orbitAngle: theta,
-                orbitSpeed: 0.003 + (1 / (r + 15)) * 0.6,
+                orbitSpeed: 0.003 + (1 / (r + 15)) * 0.5,
 
                 px, py, pz,
-                basePx: pixel.nx,
-                basePy: pixel.ny,
+                basePx: px / (pW / 2),
+                basePy: (py + 20) / (pH / 2),
 
                 gr: gCol.r, gg: gCol.g, gb: gCol.b,
-                pr: pixel.r, pg: pixel.g, pb: pixel.b,
+                pr: gCol.r, pg: gCol.g, pb: gCol.b,
 
                 phrase: phrase.native,
-                isHeart: i % 7 === 0,
-                alpha: Math.random() * 0.35 + 0.65,
-                morphDelay: Math.random() * 0.35
+                isHeart: i % 5 === 0,
+                alpha: Math.random() * 0.4 + 0.6,
+                morphDelay: Math.random() * 0.3
             });
         }
     }
 
-    recalculatePortraitCoordinates() {
-        const portraitScale = Math.min(this.width * 0.85, this.height * 0.62, 440);
-        const ratio = (this.img && this.img.height && this.img.width) ? (this.img.height / this.img.width) : 1.1;
-        
-        for (let i = 0; i < this.particles.length; i++) {
-            const p = this.particles[i];
-            p.px = p.basePx * portraitScale;
-            p.py = p.basePy * portraitScale * ratio - 15;
+    recalculateCoordinates() {
+        const isMobile = this.width < 480;
+        const pW = isMobile ? 220 : 250;
+        const pH = isMobile ? 275 : 310;
+
+        for (let p of this.particles) {
+            p.px = p.basePx * (pW / 2);
+            p.py = p.basePy * (pH / 2) - 20;
         }
     }
 
@@ -255,14 +203,10 @@ class GalaxyEngine {
                 this.lastMouseX = x;
                 this.lastMouseY = y;
             }
-            if (this.state === 'PORTRAIT') {
-                this.inspectPoint = { x, y };
-            }
         };
 
         const onEnd = () => {
             this.isDragging = false;
-            this.inspectPoint = null;
         };
 
         this.canvas.addEventListener('mousedown', (e) => onStart(e.clientX, e.clientY));
@@ -272,27 +216,12 @@ class GalaxyEngine {
         this.canvas.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
                 onStart(e.touches[0].clientX, e.touches[0].clientY);
-            } else if (e.touches.length === 2) {
-                this.touchDist = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
             }
         }, { passive: true });
 
         this.canvas.addEventListener('touchmove', (e) => {
             if (e.touches.length === 1) {
                 onMove(e.touches[0].clientX, e.touches[0].clientY);
-            } else if (e.touches.length === 2) {
-                const dist = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
-                if (this.touchDist > 0) {
-                    const delta = (dist - this.touchDist) * 0.004;
-                    this.targetZoom = Math.max(0.7, Math.min(2.2, this.targetZoom + delta));
-                }
-                this.touchDist = dist;
             }
         }, { passive: true });
 
@@ -300,7 +229,7 @@ class GalaxyEngine {
 
         this.canvas.addEventListener('wheel', (e) => {
             e.preventDefault();
-            this.targetZoom = Math.max(0.7, Math.min(2.2, this.targetZoom - e.deltaY * 0.0012));
+            this.targetZoom = Math.max(0.7, Math.min(2.0, this.targetZoom - e.deltaY * 0.0012));
         }, { passive: false });
 
         this.canvas.addEventListener('click', (e) => {
@@ -329,9 +258,15 @@ class GalaxyEngine {
             window.audioManager.triggerHaptic([30, 60]);
         }
 
+        // Reveal Crystal Clear Photo Backdrop
+        const backdrop = document.getElementById('portrait-backdrop');
+        if (backdrop) {
+            backdrop.classList.add('visible');
+        }
+
         const hint = document.getElementById('galaxy-hint');
         if (hint) {
-            hint.innerHTML = '✨ Тысячи признаний соткали твой образ.<br><span style="font-size:0.85em; opacity:0.8;">(Проведи пальцем по портрету, чтобы рассмотреть слова)</span>';
+            hint.innerHTML = '✨ Тысячи признаний в любви соткали твой образ ❤️';
         }
 
         const btnToggle = document.getElementById('btn-toggle-view');
@@ -343,21 +278,26 @@ class GalaxyEngine {
             const signatureBox = document.getElementById('signature-section');
             if (signatureBox) signatureBox.classList.add('visible');
             if (window.animateSignature) window.animateSignature();
-        }, 1600);
+        }, 1200);
     }
 
     morphToGalaxy() {
         this.state = 'GALAXY';
         this.targetMorph = 0;
-        this.targetRotX = 0.5;
+        this.targetRotX = 0.52;
 
         if (window.audioManager) {
             window.audioManager.triggerHaptic([30]);
         }
 
+        const backdrop = document.getElementById('portrait-backdrop');
+        if (backdrop) {
+            backdrop.classList.remove('visible');
+        }
+
         const hint = document.getElementById('galaxy-hint');
         if (hint) {
-            hint.innerHTML = '🌌 Вращай галактику пальцем • Нажми, чтобы собрать образ';
+            hint.innerHTML = '🌌 Вращай галактику пальцем • Нажми кнопку внизу, чтобы собрать образ';
         }
 
         const btnToggle = document.getElementById('btn-toggle-view');
@@ -375,31 +315,23 @@ class GalaxyEngine {
             this.rotY += this.galaxySpeed;
         }
 
-        this.morphProgress += (this.targetMorph - this.morphProgress) * 0.055;
+        this.morphProgress += (this.targetMorph - this.morphProgress) * 0.06;
 
         // Counter
         const targetCount = Math.round(this.morphProgress * this.displayCount);
-        this.counterCurrent += Math.round((targetCount - this.counterCurrent) * 0.12);
+        this.counterCurrent += Math.round((targetCount - this.counterCurrent) * 0.14);
         if (this.counterElement) {
             this.counterElement.innerText = this.counterCurrent.toLocaleString('ru-RU');
         }
     }
 
     render() {
-        // Fast clear
-        this.ctx.fillStyle = '#040208';
-        this.ctx.fillRect(0, 0, this.width, this.height);
+        this.ctx.clearRect(0, 0, this.width, this.height);
 
-        // 1. Static/Twinkling Stars
+        // 1. Cosmic Background Stars
         this.renderCosmicBackground();
 
-        if (!this.imgLoaded || this.particles.length === 0) {
-            this.ctx.fillStyle = 'rgba(255, 200, 220, 0.7)';
-            this.ctx.font = '16px "Montserrat", sans-serif';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillText('Загрузка галактики любви...', this.width / 2, this.height / 2);
-            return;
-        }
+        if (this.particles.length === 0) return;
 
         const cx = this.width / 2;
         const cy = this.height / 2;
@@ -408,10 +340,8 @@ class GalaxyEngine {
         const cosY = Math.cos(this.rotY);
         const sinY = Math.sin(this.rotY);
         const fov = 600;
-        const isGalaxyMode = this.morphProgress < 0.15;
-        const isPortraitMode = this.morphProgress > 0.85;
+        const isGalaxy = this.morphProgress < 0.2;
 
-        // Batch canvas font setting ONCE per frame
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.font = '10px "Caveat", "Montserrat", sans-serif';
@@ -421,12 +351,10 @@ class GalaxyEngine {
         for (let i = 0; i < count; i++) {
             const p = this.particles[i];
 
-            // Update orbit
             p.orbitAngle += p.orbitSpeed * 0.015;
             p.gx = Math.cos(p.orbitAngle) * p.orbitR;
             p.gz = Math.sin(p.orbitAngle) * p.orbitR;
 
-            // Interpolation
             const localT = Math.max(0, Math.min(1, (this.morphProgress - p.morphDelay) / (1 - p.morphDelay + 0.001)));
             const easeT = localT * localT * (3 - 2 * localT);
 
@@ -434,7 +362,6 @@ class GalaxyEngine {
             const curY = p.gy + (p.py - p.gy) * easeT;
             const curZ = p.gz + (p.pz - p.gz) * easeT;
 
-            // 3D rotation projection
             const x1 = curX * cosY - curZ * sinY;
             const z1 = curZ * cosY + curX * sinY;
             const y2 = curY * cosX - z1 * sinX;
@@ -446,19 +373,16 @@ class GalaxyEngine {
             const screenX = cx + x1 * scale;
             const screenY = cy + y2 * scale;
 
-            // Skip off-screen particles
             if (screenX < -50 || screenX > this.width + 50 || screenY < -50 || screenY > this.height + 50) {
                 continue;
             }
 
-            // Blended colors
-            const r = Math.round(p.gr + (p.pr - p.gr) * easeT);
-            const g = Math.round(p.gg + (p.pg - p.gg) * easeT);
-            const b = Math.round(p.gb + (p.pb - p.gb) * easeT);
+            const r = p.gr;
+            const g = p.gg;
+            const b = p.gb;
 
-            // In Galaxy Mode: draw ultra-fast stardust points + occasional text phrases
-            if (isGalaxyMode) {
-                if (i % 6 === 0) {
+            if (isGalaxy) {
+                if (i % 5 === 0) {
                     this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${p.alpha})`;
                     this.ctx.fillText(p.isHeart ? '♥' : p.phrase, screenX, screenY);
                 } else {
@@ -466,40 +390,14 @@ class GalaxyEngine {
                     this.ctx.fillRect(screenX, screenY, scale * 2.2, scale * 2.2);
                 }
             } else {
-                // In Portrait / Morph Mode: draw text particles
-                let text = p.isHeart ? '♥' : p.phrase;
-                
-                // Magnifier on touch/hover
-                if (this.inspectPoint && isPortraitMode) {
-                    const dist = Math.hypot(screenX - this.inspectPoint.x, screenY - this.inspectPoint.y);
-                    if (dist < 90) {
-                        this.ctx.font = '15px "Caveat", "Montserrat", sans-serif';
-                        this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-                        this.ctx.fillText(text, screenX, screenY);
-                        this.ctx.font = '10px "Caveat", "Montserrat", sans-serif';
-                        continue;
-                    }
-                }
-
-                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${p.alpha * (0.7 + easeT * 0.3)})`;
-                this.ctx.fillText(text, screenX, screenY);
+                // Portrait mode: glowing multilingual words & hearts framing the photo
+                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${p.alpha * (0.8 + easeT * 0.2)})`;
+                this.ctx.fillText(p.isHeart ? '♥' : p.phrase, screenX, screenY);
             }
         }
     }
 
     renderCosmicBackground() {
-        // Fast ambient background
-        const grad = this.ctx.createRadialGradient(
-            this.width / 2, this.height / 2, 40,
-            this.width / 2, this.height / 2, Math.max(this.width, this.height) * 0.75
-        );
-        grad.addColorStop(0, '#130822');
-        grad.addColorStop(0.6, '#080413');
-        grad.addColorStop(1, '#030107');
-        this.ctx.fillStyle = grad;
-        this.ctx.fillRect(0, 0, this.width, this.height);
-
-        // Background stars
         for (let i = 0; i < this.bgStars.length; i++) {
             const s = this.bgStars[i];
             s.twinkle += s.twinkleSpeed;
@@ -541,33 +439,51 @@ class GalaxyEngine {
         }
         eCtx.globalAlpha = 1;
 
-        // Portrait text particles
-        const portraitScale = size * 0.72;
-        const cx = size / 2;
-        const cy = size / 2 - 50;
-        const ratio = (this.img && this.img.height && this.img.width) ? (this.img.height / this.img.width) : 1.1;
+        // Draw clear centered portrait of Amina
+        const pW = 800;
+        const pH = 1000;
+        const pX = (size - pW) / 2;
+        const pY = (size - pH) / 2 - 40;
 
-        eCtx.textAlign = 'center';
-        eCtx.textBaseline = 'middle';
+        if (this.img && this.img.complete) {
+            eCtx.save();
+            // Rounded corners clip
+            eCtx.beginPath();
+            eCtx.roundRect(pX, pY, pW, pH, 40);
+            eCtx.clip();
+            eCtx.drawImage(this.img, pX, pY, pW, pH);
+            eCtx.restore();
 
-        for (let p of this.particles) {
-            const x = cx + p.basePx * portraitScale;
-            const y = cy + p.basePy * portraitScale * ratio;
-            const fontSize = p.isHeart ? 16 : 13;
-
-            eCtx.font = `${p.isHeart ? 'bold ' : ''}${fontSize}px "Caveat", "Montserrat", sans-serif`;
-            eCtx.fillStyle = `rgb(${p.pr}, ${p.pg}, ${p.pb})`;
-            eCtx.fillText(p.isHeart ? '♥' : p.phrase, x, y);
+            // Glow border
+            eCtx.strokeStyle = 'rgba(255, 216, 128, 0.5)';
+            eCtx.lineWidth = 4;
+            eCtx.strokeRect(pX, pY, pW, pH);
         }
 
-        // Gold Signature
+        // Outer starlight words
+        eCtx.textAlign = 'center';
+        eCtx.textBaseline = 'middle';
+        eCtx.font = '18px "Caveat", "Montserrat", sans-serif';
         eCtx.fillStyle = '#ffd880';
-        eCtx.font = '68px "Marck Script", cursive';
-        eCtx.fillText('Амина ✨', size / 2, size - 130);
+
+        for (let i = 0; i < 180; i++) {
+            const phrase = LOVE_LANGUAGES[i % LOVE_LANGUAGES.length];
+            const angle = (i / 180) * Math.PI * 2;
+            const radX = pW / 2 + 50 + (i % 3) * 20;
+            const radY = pH / 2 + 50 + (i % 3) * 20;
+            const x = size / 2 + Math.cos(angle) * radX;
+            const y = size / 2 - 40 + Math.sin(angle) * radY;
+            eCtx.fillText(phrase.native, x, y);
+        }
+
+        // Gold Calligraphy Signature
+        eCtx.fillStyle = '#ffd880';
+        eCtx.font = '72px "Marck Script", cursive';
+        eCtx.fillText('Амина ✨', size / 2, size - 120);
 
         eCtx.fillStyle = 'rgba(255, 255, 255, 0.85)';
         eCtx.font = '24px "Montserrat", sans-serif';
-        eCtx.fillText('Галактика из 9 494 признаний в любви', size / 2, size - 75);
+        eCtx.fillText('Галактика из 9 494 признаний в любви', size / 2, size - 65);
 
         const link = document.createElement('a');
         link.download = 'Amina_Galaxy_Of_Love.png';

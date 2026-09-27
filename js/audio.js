@@ -1,14 +1,19 @@
 ﻿/**
  * Audio and Haptics Manager
- * Handles ONLY wax seal cracking sound and background music playback (Arctic Monkeys - I Wanna Be Yours).
+ * Plays Arctic Monkeys - I Wanna Be Yours via YouTube IFrame API + HTML5 Audio fallback,
+ * and realistic wax seal crack sound on opening.
  */
 
 class AudioManager {
     constructor() {
         this.ctx = null;
         this.bgMusic = null;
+        this.ytPlayer = null;
+        this.ytReady = false;
         this.isMusicPlaying = false;
+        this.hasStarted = false;
         this.initAudioContext();
+        this.initYouTube();
     }
 
     initAudioContext() {
@@ -22,6 +27,36 @@ class AudioManager {
         if (this.ctx && this.ctx.state === 'suspended') {
             this.ctx.resume();
         }
+    }
+
+    // Initialize YouTube IFrame API for Arctic Monkeys - I Wanna Be Yours
+    initYouTube() {
+        window.onYouTubeIframeAPIReady = () => {
+            try {
+                this.ytPlayer = new YT.Player('yt-player', {
+                    height: '1',
+                    width: '1',
+                    videoId: 'nyuo9-OjNNg', // Arctic Monkeys - I Wanna Be Yours (Official Audio)
+                    playerVars: {
+                        autoplay: 0,
+                        controls: 0,
+                        loop: 1,
+                        playlist: 'nyuo9-OjNNg',
+                        playsinline: 1
+                    },
+                    events: {
+                        onReady: () => {
+                            this.ytReady = true;
+                            if (this.hasStarted && !this.isMusicPlaying) {
+                                this.playMusic();
+                            }
+                        }
+                    }
+                });
+            } catch (e) {
+                console.warn("YouTube player init:", e);
+            }
+        };
     }
 
     // Realistic wax seal breaking / cracking sound synthesis
@@ -98,7 +133,7 @@ class AudioManager {
         }
     }
 
-    // Tactile haptic feedback (silent)
+    // Tactile haptic feedback
     triggerHaptic(pattern = [40, 60, 120, 80]) {
         if ('vibrate' in navigator) {
             try {
@@ -109,35 +144,57 @@ class AudioManager {
         }
     }
 
-    // Background music initialization and playback
-    initMusic() {
-        if (!this.bgMusic) {
-            this.bgMusic = document.getElementById('bg-music');
-            if (this.bgMusic) {
-                this.bgMusic.volume = 0;
+    // Play Arctic Monkeys - I Wanna Be Yours
+    playMusic() {
+        this.hasStarted = true;
+        this.ensureContextRunning();
+
+        let played = false;
+
+        // 1. Try YouTube Player (Official Track)
+        if (this.ytPlayer && this.ytReady && typeof this.ytPlayer.playVideo === 'function') {
+            try {
+                this.ytPlayer.playVideo();
+                this.isMusicPlaying = true;
+                this.updatePlayerUI(true);
+                played = true;
+            } catch (e) {
+                console.warn("YouTube play error:", e);
             }
         }
-    }
 
-    playMusic() {
-        this.initMusic();
-        if (!this.bgMusic) return;
-
-        this.bgMusic.play().then(() => {
-            this.isMusicPlaying = true;
-            this.fadeInMusic();
-            this.updatePlayerUI(true);
-        }).catch((err) => {
-            console.log("Audio waiting for user gesture:", err);
-        });
+        // 2. Try HTML5 Audio
+        if (!this.bgMusic) {
+            this.bgMusic = document.getElementById('bg-music');
+        }
+        if (this.bgMusic) {
+            this.bgMusic.play().then(() => {
+                this.isMusicPlaying = true;
+                this.updatePlayerUI(true);
+            }).catch(() => {
+                // If HTML5 audio is blocked and YouTube is still initializing, retry on next frame
+                if (!played) {
+                    setTimeout(() => {
+                        if (this.ytPlayer && typeof this.ytPlayer.playVideo === 'function') {
+                            this.ytPlayer.playVideo();
+                            this.isMusicPlaying = true;
+                            this.updatePlayerUI(true);
+                        }
+                    }, 1000);
+                }
+            });
+        }
     }
 
     pauseMusic() {
+        this.isMusicPlaying = false;
+        if (this.ytPlayer && typeof this.ytPlayer.pauseVideo === 'function') {
+            this.ytPlayer.pauseVideo();
+        }
         if (this.bgMusic) {
             this.bgMusic.pause();
-            this.isMusicPlaying = false;
-            this.updatePlayerUI(false);
         }
+        this.updatePlayerUI(false);
     }
 
     toggleMusic() {
@@ -146,20 +203,6 @@ class AudioManager {
         } else {
             this.playMusic();
         }
-    }
-
-    fadeInMusic(targetVol = 0.75, duration = 2500) {
-        if (!this.bgMusic) return;
-        let start = Date.now();
-        const initialVol = this.bgMusic.volume;
-        const interval = setInterval(() => {
-            const elapsed = Date.now() - start;
-            const progress = Math.min(elapsed / duration, 1);
-            this.bgMusic.volume = initialVol + (targetVol - initialVol) * progress;
-            if (progress >= 1) {
-                clearInterval(interval);
-            }
-        }, 50);
     }
 
     updatePlayerUI(isPlaying) {

@@ -52,13 +52,12 @@ html, body {
 
 .nebula-glow {
     position: absolute;
-    width: 500px;
-    height: 500px;
+    width: 450px;
+    height: 450px;
     border-radius: 50%;
-    filter: blur(120px);
+    filter: blur(100px);
     opacity: 0.25;
     pointer-events: none;
-    animation: nebulaFloat 18s ease-in-out infinite alternate;
 }
 
 .nebula-1 {
@@ -71,12 +70,6 @@ html, body {
     bottom: -100px;
     right: -100px;
     background: #7928ca;
-    animation-delay: -7s;
-}
-
-@keyframes nebulaFloat {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(80px, 60px) scale(1.2); }
 }
 
 /* Main App Wrapper */
@@ -103,9 +96,9 @@ html, body {
     align-items: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: scale(0.96) translateY(20px);
-    padding: 20px;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(0.96) translateY(15px);
+    padding: 16px;
 }
 
 .screen.active {
@@ -120,8 +113,8 @@ html, body {
 .envelope-wrapper {
     position: relative;
     width: 90%;
-    max-width: 380px;
-    height: 250px;
+    max-width: 360px;
+    height: 240px;
     perspective: 1200px;
     cursor: pointer;
 }
@@ -133,7 +126,7 @@ html, body {
     background: linear-gradient(135deg, #1f142b 0%, #12091c 100%);
     border-radius: 12px;
     border: 1px solid rgba(255, 216, 128, 0.25);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(179, 136, 255, 0.15);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 25px rgba(179, 136, 255, 0.15);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -182,17 +175,7 @@ html, body {
     justify-content: center;
     cursor: pointer;
     border: 2px dashed rgba(255, 216, 128, 0.4);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    animation: waxPulse 2.5s infinite alternate;
-}
-
-.wax-seal:hover {
-    transform: scale(1.08);
-}
-
-@keyframes waxPulse {
-    0% { box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 15px rgba(209, 35, 64, 0.3); }
-    100% { box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 30px rgba(209, 35, 64, 0.7); }
+    transition: transform 0.3s ease;
 }
 
 .wax-seal svg {
@@ -209,12 +192,6 @@ html, body {
     display: flex;
     align-items: center;
     gap: 8px;
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
 }
 
 /* Shatter Shards Overlay */
@@ -236,7 +213,7 @@ html, body {
     position: absolute;
     background: #9e1b2f;
     border-radius: 3px;
-    animation: shardFly 0.7s forwards ease-out;
+    animation: shardFly 0.6s forwards ease-out;
 }
 
 @keyframes shardFly {
@@ -244,15 +221,14 @@ html, body {
     100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0); opacity: 0; }
 }
 
-/* Envelope Break Open Animation */
 .envelope.opening {
-    animation: envelopeBreak 1s forwards cubic-bezier(0.4, 0, 0.2, 1);
+    animation: envelopeBreak 0.8s forwards cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes envelopeBreak {
     0% { transform: scale(1) rotate(0deg); opacity: 1; }
     40% { transform: scale(1.05) rotate(-2deg); }
-    100% { transform: scale(1.3) translateY(-80px) rotate(4deg); opacity: 0; filter: blur(10px); }
+    100% { transform: scale(1.25) translateY(-60px) rotate(3deg); opacity: 0; filter: blur(8px); }
 }
 
 /* ==========================================================
@@ -260,15 +236,15 @@ html, body {
    ========================================================== */
 .letter-container {
     width: 92%;
-    max-width: 540px;
-    max-height: 84vh;
+    max-width: 520px;
+    height: 82vh;
     background: var(--paper-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--glass-border);
     border-radius: 20px;
-    padding: 28px 24px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 133, 162, 0.12);
+    padding: 24px 20px 18px 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 133, 162, 0.1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -276,15 +252,17 @@ html, body {
 }
 
 .letter-scroll-area {
+    flex: 1;
     overflow-y: auto;
-    padding-right: 8px;
-    margin-bottom: 20px;
+    padding-right: 6px;
+    margin-bottom: 14px;
+    -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
     scrollbar-color: var(--rose) transparent;
 }
 
 .letter-scroll-area::-webkit-scrollbar {
-    width: 5px;
+    width: 4px;
 }
 
 .letter-scroll-area::-webkit-scrollbar-thumb {
@@ -294,21 +272,21 @@ html, body {
 
 .letter-header {
     font-family: "Marck Script", cursive;
-    font-size: 2.4rem;
+    font-size: 2.2rem;
     color: var(--gold);
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     text-shadow: 0 0 12px var(--gold-glow);
 }
 
 .letter-body p {
     font-family: "Caveat", cursive;
-    font-size: 1.45rem;
-    line-height: 1.6;
+    font-size: 1.4rem;
+    line-height: 1.55;
     color: rgba(255, 255, 255, 0.95);
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transform: translateY(10px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
 .letter-body p.revealed {
@@ -318,50 +296,41 @@ html, body {
 
 .letter-actions {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     justify-content: flex-end;
     align-items: center;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 14px;
+    padding-top: 12px;
 }
 
 /* Buttons */
 .btn {
-    padding: 12px 24px;
+    padding: 10px 20px;
     border-radius: 30px;
     border: none;
     font-family: "Montserrat", sans-serif;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     text-decoration: none;
 }
 
 .btn-primary {
     background: linear-gradient(135deg, #ff85a2 0%, #a855f7 100%);
     color: #ffffff;
-    box-shadow: 0 10px 25px rgba(255, 133, 162, 0.4);
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 30px rgba(255, 133, 162, 0.6);
+    box-shadow: 0 8px 20px rgba(255, 133, 162, 0.4);
 }
 
 .btn-glass {
     background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
+    color: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.btn-glass:hover {
-    background: rgba(255, 255, 255, 0.2);
 }
 
 /* ==========================================================
@@ -371,43 +340,34 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
 }
 
 .polaroid-card {
     position: relative;
-    width: 280px;
+    width: 270px;
     background: #fdfbf7;
-    padding: 14px 14px 24px 14px;
+    padding: 12px 12px 20px 12px;
     border-radius: 6px;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 216, 128, 0.2);
-    transform: rotate(-3deg);
-    transition: transform 0.4s ease;
-    animation: polaroidFloat 4s ease-in-out infinite alternate;
-}
-
-@keyframes polaroidFloat {
-    0% { transform: rotate(-3deg) translateY(0); }
-    100% { transform: rotate(-1deg) translateY(-8px); }
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 216, 128, 0.2);
+    transform: rotate(-2deg);
 }
 
 .polaroid-tape {
     position: absolute;
-    top: -12px;
+    top: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 70px;
-    height: 22px;
-    background: rgba(255, 255, 255, 0.45);
+    width: 65px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(4px);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-    border-left: 2px dashed rgba(0,0,0,0.1);
-    border-right: 2px dashed rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
 .polaroid-img-box {
     width: 100%;
-    height: 310px;
+    height: 290px;
     overflow: hidden;
     border-radius: 3px;
     background: #111;
@@ -421,19 +381,61 @@ html, body {
 }
 
 .polaroid-caption {
-    margin-top: 14px;
+    margin-top: 12px;
     font-family: "Marck Script", cursive;
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     color: #1a1622;
     text-align: center;
 }
 
 /* ==========================================================
-   STEP 4 & 5: GALAXY & FINALE (ГАЛАКТИКА И ПОРТРЕТ)
+   STEP 4 & 5: GALAXY & CLEAR PORTRAIT
    ========================================================== */
 #screen-galaxy {
     padding: 0;
     overflow: hidden;
+    position: relative;
+}
+
+/* Crystal-Clear HD Photo Backdrop */
+.portrait-backdrop {
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 310px;
+    border-radius: 24px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: 0 0 35px rgba(255, 133, 162, 0.35), 0 0 70px rgba(179, 136, 255, 0.25);
+    border: 1.5px solid rgba(255, 216, 128, 0.3);
+}
+
+.portrait-backdrop.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.portrait-hd-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: contrast(1.06) brightness(1.03);
+}
+
+.portrait-halo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 216, 128, 0) 60%, rgba(10, 6, 20, 0.5) 100%);
+    pointer-events: none;
 }
 
 #galaxy-canvas {
@@ -442,7 +444,8 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
+    z-index: 3;
+    pointer-events: auto;
 }
 
 /* HUD Overlay */
@@ -457,73 +460,55 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 24px 20px;
+    padding: 20px 16px;
 }
 
 .hud-top {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    width: 100%;
 }
 
 .love-counter-box {
-    background: rgba(15, 10, 25, 0.65);
-    backdrop-filter: blur(12px);
+    background: rgba(15, 10, 25, 0.7);
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 216, 128, 0.25);
-    padding: 8px 16px;
+    padding: 6px 14px;
     border-radius: 20px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.95rem;
+    gap: 6px;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--gold);
 }
 
 .love-counter-box span {
     color: #fff;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
 }
 
-.galaxy-hint {
-    text-align: center;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.85);
-    background: rgba(10, 6, 18, 0.5);
-    backdrop-filter: blur(10px);
-    padding: 8px 18px;
-    border-radius: 25px;
-    margin: 0 auto;
-    max-width: 90%;
-    line-height: 1.4;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* Floating Music Player */
+/* Music Player Widget */
 .music-player-widget {
     pointer-events: auto;
-    background: rgba(18, 11, 28, 0.7);
-    backdrop-filter: blur(14px);
+    background: rgba(18, 11, 28, 0.75);
+    backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 30px;
-    padding: 6px 14px 6px 6px;
+    padding: 5px 12px 5px 5px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     cursor: pointer;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    transition: transform 0.3s ease;
-}
-
-.music-player-widget:hover {
-    transform: scale(1.04);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
 .music-disc {
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: conic-gradient(#333 0deg, #111 90deg, #333 180deg, #111 270deg, #333 360deg);
     border: 2px solid #555;
@@ -535,8 +520,8 @@ html, body {
 
 .music-disc::after {
     content: '';
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: var(--rose);
 }
@@ -555,29 +540,42 @@ html, body {
 }
 
 .music-title {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: #fff;
 }
 
 .music-artist {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     color: var(--text-muted);
 }
 
-/* Signature & Action Buttons */
+/* Bottom Actions & Hint (All positioned at bottom so face is 100% visible!) */
 .hud-bottom {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
     width: 100%;
+}
+
+.galaxy-hint {
+    text-align: center;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(10, 6, 18, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 95%;
+    line-height: 1.35;
 }
 
 .signature-container {
     opacity: 0;
-    transform: translateY(15px);
-    transition: all 0.8s ease;
+    transform: translateY(10px);
+    transition: all 0.6s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -589,8 +587,8 @@ html, body {
 }
 
 .signature-svg {
-    width: 220px;
-    height: 70px;
+    width: 190px;
+    height: 55px;
     filter: drop-shadow(0 0 8px rgba(255, 216, 128, 0.8));
 }
 
@@ -605,13 +603,11 @@ html, body {
 }
 
 .signature-path.draw {
-    animation: drawSignature 2.8s ease-in-out forwards;
+    animation: drawSignature 2.5s ease-in-out forwards;
 }
 
 @keyframes drawSignature {
-    to {
-        stroke-dashoffset: 0;
-    }
+    to { stroke-dashoffset: 0; }
 }
 
 .action-buttons-group {
@@ -619,28 +615,28 @@ html, body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
-    max-width: 480px;
+    max-width: 440px;
 }
 
-/* Toast Notifications */
+/* Toast */
 .toast {
     position: fixed;
-    top: 24px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%) translateY(-50px);
     background: rgba(25, 15, 38, 0.95);
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(12px);
     border: 1px solid var(--gold);
-    padding: 12px 24px;
-    border-radius: 30px;
-    font-size: 0.9rem;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 0.85rem;
     color: var(--gold);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.6), 0 0 20px var(--gold-glow);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     z-index: 1000;
     opacity: 0;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.35s ease;
     pointer-events: none;
     text-align: center;
 }
@@ -650,25 +646,30 @@ html, body {
     transform: translateX(-50%) translateY(0);
 }
 
-/* Mobile responsive adjustments */
+/* Mobile responsive */
 @media (max-width: 480px) {
+    .portrait-backdrop {
+        width: 220px;
+        height: 275px;
+        top: 44%;
+    }
     .envelope-recipient {
-        font-size: 2.4rem;
+        font-size: 2.3rem;
     }
     .letter-header {
-        font-size: 2rem;
+        font-size: 1.9rem;
     }
     .letter-body p {
-        font-size: 1.3rem;
+        font-size: 1.25rem;
     }
     .polaroid-card {
-        width: 250px;
+        width: 240px;
     }
     .polaroid-img-box {
-        height: 270px;
+        height: 260px;
     }
     .btn {
-        padding: 10px 18px;
-        font-size: 0.85rem;
+        padding: 9px 15px;
+        font-size: 0.82rem;
     }
 }

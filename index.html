@@ -28,11 +28,14 @@
         <div class="nebula-glow nebula-2"></div>
     </div>
 
-    <!-- Audio Element (Arctic Monkeys - I Wanna Be Yours) -->
+    <!-- Hidden YouTube Audio Player for Arctic Monkeys - I Wanna Be Yours -->
+    <div id="yt-player-container" style="position:fixed; top:-9999px; left:-9999px; width:1px; height:1px; opacity:0; pointer-events:none;">
+        <div id="yt-player"></div>
+    </div>
+
+    <!-- HTML5 Audio Fallback -->
     <audio id="bg-music" loop preload="auto">
-        <!-- High-quality romantic audio source + local fallback -->
         <source src="assets/music.mp3" type="audio/mpeg">
-        <source src="https://cdn.pixabay.com/download/audio/2022/11/06/audio_9549fbe4a8.mp3?filename=romantic-ambient-guitar-125927.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Toast Notification -->
@@ -77,7 +80,6 @@
                 
                 <div class="letter-scroll-area" id="letter-content-box">
                     <div class="letter-body" id="letter-paragraphs">
-                        <!-- Paragraphs will be dynamically typed & revealed -->
                         <p>Амина, я давно хотел тебе это сказать, просто иногда мне сложно правильно подобрать слова. Я хочу, чтобы ты знала, что я правда тебя люблю и очень сильно тебя ценю. Может быть, я не всегда умею показывать это так, как нужно, иногда могу сказать что-то не то или сделать что-то, что тебя задевает, но мои чувства к тебе от этого не становятся меньше.</p>
                         
                         <p>Ты стала для меня человеком, который мне действительно дорог. Мне нравится в тебе не только твоя внешность, хотя, конечно, ты для меня очень красивая. Мне нравится твой характер, твоя улыбка, твои привычки, то, как ты разговариваешь, как реагируешь на разные вещи. Мне дороги даже какие-то маленькие моменты, которые для других могли бы показаться обычными. Я запоминаю их, потому что они связаны с тобой.</p>
@@ -130,7 +132,13 @@
              ШАГ 4 & 5: ГАЛАКТИКА И ПОРТРЕТ ИЗ СЛОВ
              ========================================== -->
         <section id="screen-galaxy" class="screen">
-            <!-- WebGL / 2D Canvas Engine -->
+            <!-- Clear HD Photo Backdrop (reveals in portrait mode) -->
+            <div id="portrait-backdrop" class="portrait-backdrop">
+                <img src="assets/amina.png" alt="Амина" class="portrait-hd-img">
+                <div class="portrait-halo"></div>
+            </div>
+
+            <!-- Fast 60FPS WebGL / 2D Canvas Engine -->
             <canvas id="galaxy-canvas"></canvas>
 
             <!-- HUD Overlay -->
@@ -152,13 +160,13 @@
                     </div>
                 </div>
 
-                <!-- Central Hint -->
-                <div class="galaxy-hint" id="galaxy-hint">
-                    🌌 Вращай галактику пальцем • Нажми, чтобы собрать образ
-                </div>
-
-                <!-- Bottom Signature & Actions -->
+                <!-- Bottom Signature & Actions & Hint (Moved to bottom so photo is 100% visible!) -->
                 <div class="hud-bottom">
+                    <!-- Hint moved to bottom -->
+                    <div class="galaxy-hint" id="galaxy-hint">
+                        🌌 Вращай галактику пальцем • Нажми кнопку внизу, чтобы собрать образ
+                    </div>
+
                     <!-- Calligraphic Signature -->
                     <div class="signature-container" id="signature-section">
                         <svg class="signature-svg" viewBox="0 0 300 90">
@@ -169,10 +177,10 @@
 
                     <!-- Actions -->
                     <div class="action-buttons-group">
-                        <button id="btn-toggle-view" class="btn btn-glass">
+                        <button id="btn-toggle-view" class="btn btn-primary" style="box-shadow: 0 0 20px rgba(255,133,162,0.6);">
                             ✨ Собрать Портрет
                         </button>
-                        <button id="btn-save-image" class="btn btn-primary">
+                        <button id="btn-save-image" class="btn btn-glass">
                             📸 Сохранить себе
                         </button>
                         <button id="btn-share" class="btn btn-glass">
@@ -184,6 +192,9 @@
         </section>
 
     </div>
+
+    <!-- YouTube IFrame API for Arctic Monkeys - I Wanna Be Yours -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <!-- Application Scripts -->
     <script src="js/languages.js"></script>

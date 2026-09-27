@@ -1,0 +1,674 @@
+﻿/* ==========================================================
+   ГАЛАКТИКА ПРИЗНАНИЙ — ДЛЯ АМИНЫ
+   Design: Luxury Deep Cosmic, Glassmorphism, 3D Romance
+   ========================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Marck+Script&family=Montserrat:wght@300;400;500;600;700&display=swap");
+
+:root {
+    --bg-dark: #040208;
+    --bg-space: radial-gradient(circle at 50% 30%, #150928 0%, #080312 60%, #030106 100%);
+    --gold: #ffd880;
+    --gold-glow: rgba(255, 216, 128, 0.4);
+    --rose: #ff85a2;
+    --rose-glow: rgba(255, 133, 162, 0.45);
+    --purple: #b388ff;
+    --paper-bg: rgba(20, 14, 28, 0.88);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --text-primary: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.75);
+    --wax-red: #9e1b2f;
+    --wax-dark: #6e0d1d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg-dark);
+    font-family: "Montserrat", sans-serif;
+    color: var(--text-primary);
+    position: fixed;
+}
+
+/* Background Cosmic Atmosphere */
+#universe-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-space);
+    z-index: 0;
+}
+
+.nebula-glow {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.25;
+    pointer-events: none;
+    animation: nebulaFloat 18s ease-in-out infinite alternate;
+}
+
+.nebula-1 {
+    top: -100px;
+    left: -100px;
+    background: #ff5277;
+}
+
+.nebula-2 {
+    bottom: -100px;
+    right: -100px;
+    background: #7928ca;
+    animation-delay: -7s;
+}
+
+@keyframes nebulaFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(80px, 60px) scale(1.2); }
+}
+
+/* Main App Wrapper */
+#app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Screen Transitions */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(0.96) translateY(20px);
+    padding: 20px;
+}
+
+.screen.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1) translateY(0);
+}
+
+/* ==========================================================
+   STEP 1: ENVELOPE (КОНВЕРТ)
+   ========================================================== */
+.envelope-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 380px;
+    height: 250px;
+    perspective: 1200px;
+    cursor: pointer;
+}
+
+.envelope {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1f142b 0%, #12091c 100%);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 216, 128, 0.25);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(179, 136, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+}
+
+.envelope-recipient {
+    position: absolute;
+    top: 35px;
+    font-family: "Marck Script", "Caveat", cursive;
+    font-size: 2.8rem;
+    color: var(--gold);
+    text-shadow: 0 0 15px var(--gold-glow);
+    letter-spacing: 2px;
+}
+
+.envelope-subtext {
+    position: absolute;
+    top: 95px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+/* Wax Seal with Shatter Animation */
+.wax-seal-container {
+    position: absolute;
+    bottom: -28px;
+    width: 76px;
+    height: 76px;
+    z-index: 20;
+}
+
+.wax-seal {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #d12340 0%, #9e1b2f 50%, #540814 100%);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.4), 0 0 20px rgba(209, 35, 64, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px dashed rgba(255, 216, 128, 0.4);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: waxPulse 2.5s infinite alternate;
+}
+
+.wax-seal:hover {
+    transform: scale(1.08);
+}
+
+@keyframes waxPulse {
+    0% { box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 15px rgba(209, 35, 64, 0.3); }
+    100% { box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 30px rgba(209, 35, 64, 0.7); }
+}
+
+.wax-seal svg {
+    width: 34px;
+    height: 34px;
+    fill: #ffd880;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.open-hint {
+    margin-top: 60px;
+    font-size: 0.9rem;
+    color: var(--rose);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+/* Shatter Shards Overlay */
+.shatter-shards {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: none;
+}
+
+.shatter-shards.cracking {
+    display: block;
+}
+
+.shard {
+    position: absolute;
+    background: #9e1b2f;
+    border-radius: 3px;
+    animation: shardFly 0.7s forwards ease-out;
+}
+
+@keyframes shardFly {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0); opacity: 0; }
+}
+
+/* Envelope Break Open Animation */
+.envelope.opening {
+    animation: envelopeBreak 1s forwards cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes envelopeBreak {
+    0% { transform: scale(1) rotate(0deg); opacity: 1; }
+    40% { transform: scale(1.05) rotate(-2deg); }
+    100% { transform: scale(1.3) translateY(-80px) rotate(4deg); opacity: 0; filter: blur(10px); }
+}
+
+/* ==========================================================
+   STEP 2: LETTER (ПИСЬМО)
+   ========================================================== */
+.letter-container {
+    width: 92%;
+    max-width: 540px;
+    max-height: 84vh;
+    background: var(--paper-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 133, 162, 0.12);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+.letter-scroll-area {
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-bottom: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rose) transparent;
+}
+
+.letter-scroll-area::-webkit-scrollbar {
+    width: 5px;
+}
+
+.letter-scroll-area::-webkit-scrollbar-thumb {
+    background: var(--rose);
+    border-radius: 10px;
+}
+
+.letter-header {
+    font-family: "Marck Script", cursive;
+    font-size: 2.4rem;
+    color: var(--gold);
+    margin-bottom: 18px;
+    text-shadow: 0 0 12px var(--gold-glow);
+}
+
+.letter-body p {
+    font-family: "Caveat", cursive;
+    font-size: 1.45rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 18px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.letter-body p.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.letter-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 14px;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: none;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff85a2 0%, #a855f7 100%);
+    color: #ffffff;
+    box-shadow: 0 10px 25px rgba(255, 133, 162, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(255, 133, 162, 0.6);
+}
+
+.btn-glass {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-glass:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================
+   STEP 3: POLAROID (ФОТОКАРТОЧКА)
+   ========================================================== */
+.polaroid-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.polaroid-card {
+    position: relative;
+    width: 280px;
+    background: #fdfbf7;
+    padding: 14px 14px 24px 14px;
+    border-radius: 6px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 216, 128, 0.2);
+    transform: rotate(-3deg);
+    transition: transform 0.4s ease;
+    animation: polaroidFloat 4s ease-in-out infinite alternate;
+}
+
+@keyframes polaroidFloat {
+    0% { transform: rotate(-3deg) translateY(0); }
+    100% { transform: rotate(-1deg) translateY(-8px); }
+}
+
+.polaroid-tape {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    border-left: 2px dashed rgba(0,0,0,0.1);
+    border-right: 2px dashed rgba(0,0,0,0.1);
+}
+
+.polaroid-img-box {
+    width: 100%;
+    height: 310px;
+    overflow: hidden;
+    border-radius: 3px;
+    background: #111;
+}
+
+.polaroid-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.polaroid-caption {
+    margin-top: 14px;
+    font-family: "Marck Script", cursive;
+    font-size: 1.8rem;
+    color: #1a1622;
+    text-align: center;
+}
+
+/* ==========================================================
+   STEP 4 & 5: GALAXY & FINALE (ГАЛАКТИКА И ПОРТРЕТ)
+   ========================================================== */
+#screen-galaxy {
+    padding: 0;
+    overflow: hidden;
+}
+
+#galaxy-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* HUD Overlay */
+.galaxy-hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 20px;
+}
+
+.hud-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.love-counter-box {
+    background: rgba(15, 10, 25, 0.65);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 216, 128, 0.25);
+    padding: 8px 16px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--gold);
+}
+
+.love-counter-box span {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.galaxy-hint {
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(10, 6, 18, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 8px 18px;
+    border-radius: 25px;
+    margin: 0 auto;
+    max-width: 90%;
+    line-height: 1.4;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Floating Music Player */
+.music-player-widget {
+    pointer-events: auto;
+    background: rgba(18, 11, 28, 0.7);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    padding: 6px 14px 6px 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+}
+
+.music-player-widget:hover {
+    transform: scale(1.04);
+}
+
+.music-disc {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: conic-gradient(#333 0deg, #111 90deg, #333 180deg, #111 270deg, #333 360deg);
+    border: 2px solid #555;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.music-disc::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--rose);
+}
+
+.music-disc.playing {
+    animation: spinDisc 3s linear infinite;
+}
+
+@keyframes spinDisc {
+    100% { transform: rotate(360deg); }
+}
+
+.music-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.music-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.music-artist {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+/* Signature & Action Buttons */
+.hud-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+}
+
+.signature-container {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.8s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.signature-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.signature-svg {
+    width: 220px;
+    height: 70px;
+    filter: drop-shadow(0 0 8px rgba(255, 216, 128, 0.8));
+}
+
+.signature-path {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    stroke: var(--gold);
+    stroke-width: 3.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.signature-path.draw {
+    animation: drawSignature 2.8s ease-in-out forwards;
+}
+
+@keyframes drawSignature {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.action-buttons-group {
+    pointer-events: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 480px;
+}
+
+/* Toast Notifications */
+.toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50px);
+    background: rgba(25, 15, 38, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--gold);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    color: var(--gold);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6), 0 0 20px var(--gold-glow);
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    text-align: center;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 480px) {
+    .envelope-recipient {
+        font-size: 2.4rem;
+    }
+    .letter-header {
+        font-size: 2rem;
+    }
+    .letter-body p {
+        font-size: 1.3rem;
+    }
+    .polaroid-card {
+        width: 250px;
+    }
+    .polaroid-img-box {
+        height: 270px;
+    }
+    .btn {
+        padding: 10px 18px;
+        font-size: 0.85rem;
+    }
+}

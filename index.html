@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Галактика признаний • Для Амины ❤️</title>
+    
+    <!-- Meta tags for social previews -->
+    <meta name="description" content="Персональный подарок для Амины. Галактика из тысяч признаний в любви, собирающихся в портрет.">
+    <meta property="og:title" content="Галактика признаний • Для Амины ❤️">
+    <meta property="og:description" content="Особенное послание и галактика из тысяч признаний в любви.">
+    <meta property="og:image" content="assets/amina.png">
+    
+    <!-- Favicon & PWA Theme -->
+    <meta name="theme-color" content="#040208">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+
+    <!-- Fonts & Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Deep Space Universe Background -->
+    <div id="universe-bg">
+        <div class="nebula-glow nebula-1"></div>
+        <div class="nebula-glow nebula-2"></div>
+    </div>
+
+    <!-- Audio Element (Arctic Monkeys - I Wanna Be Yours) -->
+    <audio id="bg-music" loop preload="auto">
+        <!-- High-quality romantic audio source + local fallback -->
+        <source src="assets/music.mp3" type="audio/mpeg">
+        <source src="https://cdn.pixabay.com/download/audio/2022/11/06/audio_9549fbe4a8.mp3?filename=romantic-ambient-guitar-125927.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">✨ Ссылка скопирована в буфер обмена</div>
+
+    <!-- Main Interactive App Container -->
+    <div id="app">
+
+        <!-- ==========================================
+             ШАГ 1: КОНВЕРТ С СУРГУЧНОЙ ПЕЧАТЬЮ
+             ========================================== -->
+        <section id="screen-envelope" class="screen active">
+            <div class="envelope-wrapper" id="envelope-card">
+                <div class="envelope" id="envelope-element">
+                    <div class="envelope-recipient">Амина</div>
+                    <div class="envelope-subtext">Личное послание для тебя</div>
+
+                    <!-- Wax Seal -->
+                    <div class="wax-seal-container" id="wax-seal-btn">
+                        <div class="wax-seal" title="Нажми, чтобы сломать печать">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                        </div>
+                        <!-- Crack Shards Overlay -->
+                        <div class="shatter-shards" id="seal-shards"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="open-hint">
+                <span>✨ Коснись печати, чтобы открыть</span>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             ШАГ 2: ПИСЬМО (ЖИВОЙ РУКОПИСНЫЙ ТЕКСТ)
+             ========================================== -->
+        <section id="screen-letter" class="screen">
+            <div class="letter-container">
+                <div class="letter-header">Амина...</div>
+                
+                <div class="letter-scroll-area" id="letter-content-box">
+                    <div class="letter-body" id="letter-paragraphs">
+                        <!-- Paragraphs will be dynamically typed & revealed -->
+                        <p>Амина, я давно хотел тебе это сказать, просто иногда мне сложно правильно подобрать слова. Я хочу, чтобы ты знала, что я правда тебя люблю и очень сильно тебя ценю. Может быть, я не всегда умею показывать это так, как нужно, иногда могу сказать что-то не то или сделать что-то, что тебя задевает, но мои чувства к тебе от этого не становятся меньше.</p>
+                        
+                        <p>Ты стала для меня человеком, который мне действительно дорог. Мне нравится в тебе не только твоя внешность, хотя, конечно, ты для меня очень красивая. Мне нравится твой характер, твоя улыбка, твои привычки, то, как ты разговариваешь, как реагируешь на разные вещи. Мне дороги даже какие-то маленькие моменты, которые для других могли бы показаться обычными. Я запоминаю их, потому что они связаны с тобой.</p>
+                        
+                        <p>Я ценю каждое наше общение, каждое сообщение, каждый разговор. Даже когда мы просто говорим ни о чем, мне всё равно приятно, потому что это время с тобой. Мне нравится знать, как у тебя прошёл день, что тебя радует, что тебя расстраивает, о чем ты думаешь. Мне хочется быть человеком, рядом с которым ты можешь быть собой и не бояться показать свои настоящие чувства.</p>
+                        
+                        <p>Я понимаю, что иногда между нами бывает сложно. Бывают моменты, когда мы не понимаем друг друга, можем обидеть друг друга или сказать лишнее. Но даже в такие моменты я не перестаю ценить тебя. Наоборот, я понимаю, насколько ты мне дорога. Я не хочу относиться к тебе как к человеку, которого можно просто взять и потерять, а потом забыть. Ты для меня не такой человек.</p>
+                        
+                        <p>Я люблю в тебе то, какая ты. Не идеальную, не какую-то придуманную мной, а именно настоящую тебя. Со всеми твоими эмоциями, характером, настроением, переживаниями и маленькими недостатками. Мне не нужно, чтобы ты всегда была идеальной рядом со мной. Мне важно, чтобы ты была собой.</p>
+                        
+                        <p>И если иногда я ревную, переживаю или слишком много думаю, это не потому, что я хочу тебя ограничивать или контролировать. Просто ты стала для меня слишком важным человеком, и иногда я боюсь тебя потерять. Я понимаю, что со своими чувствами мне тоже нужно уметь справляться, и я не хочу делать тебе больно из-за своих страхов.</p>
+                        
+                        <p>Я хочу, чтобы ты знала одну вещь: я действительно ценю тебя. Ценю не только тогда, когда между нами всё хорошо, а всегда. Я благодарен тебе за всё хорошее, что между нами было и есть. За моменты, когда ты была рядом, за твоё внимание, за твою заботу, за слова, которые ты мне говорила. Возможно, я не всегда говорил тебе спасибо за это, но я всё это замечаю и помню.</p>
+                        
+                        <p>Мне хочется, чтобы рядом со мной ты чувствовала себя любимой, важной и нужной. Чтобы ты никогда не думала, что ты для меня просто очередной человек. Потому что это совсем не так.</p>
+                        
+                        <p>Я не знаю, что будет дальше и как всё сложится, но я точно знаю, что мои чувства к тебе настоящие. Я не хочу обещать тебе какие-то красивые вещи только ради слов. Я просто хочу своими поступками показывать тебе, насколько ты мне дорога.</p>
+                        
+                        <p style="font-size: 1.6rem; color: var(--gold); text-align: center; margin-top: 24px;">Амина, я люблю тебя. И правда очень тебя ценю. Спасибо тебе за то, что ты есть в моей жизни. ❤️</p>
+                    </div>
+                </div>
+
+                <div class="letter-actions">
+                    <button id="btn-skip-typing" class="btn btn-glass">Показать всё</button>
+                    <button id="btn-to-polaroid" class="btn btn-primary">Продолжить ➔</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             ШАГ 3: ПОЛАРОИД (ПАМЯТНАЯ КАРТОЧКА)
+             ========================================== -->
+        <section id="screen-polaroid" class="screen">
+            <div class="polaroid-wrapper">
+                <div class="polaroid-card">
+                    <div class="polaroid-tape"></div>
+                    <div class="polaroid-img-box">
+                        <img src="assets/amina.png" alt="Амина" id="polaroid-photo">
+                    </div>
+                    <div class="polaroid-caption">Моя прекрасная Амина ✨</div>
+                </div>
+
+                <button id="btn-to-galaxy" class="btn btn-primary" style="font-size: 1.05rem; padding: 14px 32px;">
+                    🌌 Войти в Галактику чувств
+                </button>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             ШАГ 4 & 5: ГАЛАКТИКА И ПОРТРЕТ ИЗ СЛОВ
+             ========================================== -->
+        <section id="screen-galaxy" class="screen">
+            <!-- WebGL / 2D Canvas Engine -->
+            <canvas id="galaxy-canvas"></canvas>
+
+            <!-- HUD Overlay -->
+            <div class="galaxy-hud">
+                <!-- Top Bar -->
+                <div class="hud-top">
+                    <!-- Counter -->
+                    <div class="love-counter-box">
+                        <span>♥</span> <span id="love-counter">0</span> признаний
+                    </div>
+
+                    <!-- Music Player Widget -->
+                    <div class="music-player-widget" id="music-widget" title="Включить / выключить музыку">
+                        <div class="music-disc" id="music-disc"></div>
+                        <div class="music-info">
+                            <div class="music-title">I Wanna Be Yours</div>
+                            <div class="music-artist">Arctic Monkeys 🎵</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Central Hint -->
+                <div class="galaxy-hint" id="galaxy-hint">
+                    🌌 Вращай галактику пальцем • Нажми, чтобы собрать образ
+                </div>
+
+                <!-- Bottom Signature & Actions -->
+                <div class="hud-bottom">
+                    <!-- Calligraphic Signature -->
+                    <div class="signature-container" id="signature-section">
+                        <svg class="signature-svg" viewBox="0 0 300 90">
+                            <path class="signature-path" id="signature-path" d="M 40,65 Q 60,15 80,65 Q 95,45 110,65 Q 125,35 140,65 Q 155,50 170,65 Q 190,20 210,65 Q 230,45 260,35" />
+                            <text x="150" y="60" text-anchor="middle" font-family="'Marck Script', cursive" font-size="44" fill="#ffd880" filter="drop-shadow(0 0 10px rgba(255,216,128,0.8))">Амина ✨</text>
+                        </svg>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="action-buttons-group">
+                        <button id="btn-toggle-view" class="btn btn-glass">
+                            ✨ Собрать Портрет
+                        </button>
+                        <button id="btn-save-image" class="btn btn-primary">
+                            📸 Сохранить себе
+                        </button>
+                        <button id="btn-share" class="btn btn-glass">
+                            🔗 Поделиться
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="js/languages.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/galaxy.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
